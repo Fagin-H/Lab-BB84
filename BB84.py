@@ -49,8 +49,8 @@ def joindata(fivedata,no5data):
     return(np.sort(data,1))
 
 def removeDoublePhotonEvents(data):
-    shiftedPlus = np.append(data[-1:], data[:-1])
-    shiftedMinus = np.append(data[1:], data[:0])
+    shiftedPlus = np.append(data[-1], data[:-1])
+    shiftedMinus = np.append(data[1:], data[0])
     croppedData = data[np.where(np.logical_not(np.logical_and(np.logical_or(np.isclose(data[:,1],shiftedPlus[:,1]),np.isclose(data[:,1], shiftedMinus[:,1])), np.logical_not(np.isclose(data[:,1],5)))))]
     return croppedData
  
