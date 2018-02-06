@@ -17,28 +17,27 @@ def only5(data):
     data2 = np.delete(data, index, 0)
     return data2
     
-def average_time(data):
-    diff=data[:,0]-np.roll(data[:,0],1)
+def average_time(only5_data):
+    diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
     diff=np.average(diff[1:])
     return diff
 
+def add5(only5_data):
 
-
-data=only5(read_data('testdata.txt'))
-
-ave=average_time(data)
-
-diff=data[:,0]-np.roll(data[:,0],1)
-index = np.argwhere(diff>1.5*ave)
-
-listindex=[]
-for x in index:
-    listindex.append(x[0])
-
-data2=np.split(data,listindex)
-newdata=data2[0]
-for i in range(len(data2)):
-    newdata=np.hstack(newdata,newdata[-1]+ave)
-    newdata=np.hstack(newdata,data2[i])
-
-
+    ave=average_time(only5_data)
+    
+    diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
+    index = np.argwhere(diff>1.5*ave)
+    
+    listindex=index.flatten()
+    
+    split_data=np.split(only5_data,listindex)
+    newdata=[]
+    for sliced in split_data[:-1]:
+        newdata.append(sliced)
+        newdata.append([sliced[-1,0]+ave,5.])
+    newdata.append(split_data[-1])
+    return np.vstack(newdata)
+    
+def fixdata(data):
+    return add5(only5(data))
