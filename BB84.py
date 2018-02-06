@@ -7,5 +7,5 @@ Created on Tue Feb  6 13:29:51 2018
 
 import numpy as np
 
-def read_data(location)
+def read_data(location):
     return np.loadtxt(location,delimiter=",")
