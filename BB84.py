@@ -30,7 +30,6 @@ def average_time(only5_data):
 def add5(only5_data):
 
     ave=average_time(only5_data)
-    
     diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
     index = np.argwhere(diff>1.5*ave)
     
@@ -46,7 +45,7 @@ def add5(only5_data):
 
 def joindata(fivedata,no5data):
     data=np.vstack(([no5data,fivedata]))
-    return(np.sort(data,1))
+    return data[np.lexsort(np.fliplr(data).T)]
 
 def removeDoublePhotonEvents(data):
     shiftedPlus = np.append(data[-1], data[:-1])
@@ -55,7 +54,7 @@ def removeDoublePhotonEvents(data):
     return croppedData
  
 def fixdata(data):
-    data2=joindata(add5(only5(data)),no5(data))#removeDoublePhotonEvents(data)))
+    data2=joindata(add5(only5(data)),no5(removeDoublePhotonEvents(data)))
     return data2
 
 testdata=read_data('testdata.txt')
