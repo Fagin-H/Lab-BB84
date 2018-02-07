@@ -48,13 +48,16 @@ def removeDoublePhotonEvents(data):
     return croppedData
  
 def fixdata(data):
-    data2=splitdata(data)#removeDoublePhotonEvents(data))
+    data2=splitdata(removeDoublePhotonEvents(data))
     return data2
 
 
-testdata=read_data('4level_200bins_2s_123width.txt')
+#testdata=read_data('4level_200bins_2s_123width.txt')
 
+fixeddata=fixdata(testdata)
 
+for i in range(len(fixeddata)):
+    np.savetxt('data'+str(i)+'.txt',fixeddata[i])
 
 
 
