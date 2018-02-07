@@ -51,24 +51,15 @@ def fixdata(data):
     data2=splitdata(removeDoublePhotonEvents(data))
     return data2
 
+if __name__=='__main__':    
+    testdata=read_data('4level_200bins_2s_123width.txt')
+    
+    fixeddata=fixdata(testdata)
+    
+    for i in range(len(fixeddata)):
+        np.savetxt('data'+str(i)+'.txt',fixeddata[i])
 
-#testdata=read_data('4level_200bins_2s_123width.txt')
-
-fixeddata=fixdata(testdata)
-
-for i in range(len(fixeddata)):
-    np.savetxt('data'+str(i)+'.txt',fixeddata[i])
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
 
