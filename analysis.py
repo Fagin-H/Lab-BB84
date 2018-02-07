@@ -19,9 +19,9 @@ def basic_error_rate(count_data, steps_for_counts):
     error_rate = np.mean(error_list)
 
     print("Basic error rate is {}".format(error_rate))
-
-def BB84_error_rate(count_data, steps_for_counts):
-
+    
+def get_relevant_counts(count_data, steps_for_counts):
+    
     count_data = count_data.astype(int)
     count_data = count_data.reshape(count_data.size,1)
     steps_for_counts = steps_for_counts.astype(int)
@@ -31,16 +31,30 @@ def BB84_error_rate(count_data, steps_for_counts):
     detection_list = np.any(detection_array, axis=1)
     counts_to_consider = count_data[detection_list]
     steps_to_consider = steps_for_counts[detection_list]
-    
     counts_to_consider = counts_to_consider.reshape(counts_to_consider.size)
+    
+    return counts_to_consider, steps_to_consider
+
+def BB84_error_rate(counts_to_consider, steps_to_consider):
     
     error_list = np.logical_not(np.isclose(counts_to_consider, steps_to_consider))
     error_rate = np.mean(error_list)
 
     print("BB84 error rate is {}".format(error_rate))
+    
+def channel_error_rate(counts_to_consider, steps_to_consider, n):
+    
+    counts_of_n = counts_to_consider[np.isclose(steps_to_consider, n)]
+    steps_of_n = steps_to_consider[np.isclose(steps_to_consider, n)]
+    
+    error_list = np.logical_not(np.isclose(counts_of_n, steps_of_n))
+    error_rate = np.mean(error_list)
+    
+    print("Error rate of channel " + str(n) + " is {}".format(error_rate))
 
 if __name__ == "__main__":
 
-    data = read_data("countdata.txt")
+    data = read_data("4level_200bins_2s_123width_(0,).txt")
     count_data, steps_for_counts = get_counts_with_voltage_steps(data)
-    BB84_error_rate(count_data, steps_for_counts)
+    counts_to_consider, steps_to_consider = get_relevant_counts(count_data, steps_for_counts)
+    channel_error_rate(counts_to_consider, steps_to_consider,0)

@@ -38,31 +38,26 @@ def splitdata(data):
 
 def removeDoublePhotonEvents(data):
     shiftedPlus = np.append(data[-1:], data[:-1], axis = 0)
-    shiftedMinus = np.append(data[0:], data[:0],axis = 0)
-    croppedData = data[np.where(np.logical_not(np.logical_and(np.logical_or(np.isclose(data[:,1],shiftedPlus[:,1]),np.isclose(data[:,1], shiftedMinus[:,1])), np.logical_not(np.isclose(data[:,1],5)))))]
+    shiftedMinus = np.append(data[1:], data[:1], axis = 0)
+    croppedData = data[np.where(
+            np.logical_not(
+                    np.logical_and(
+                            np.logical_or(
+                                    np.logical_not(np.isclose(shiftedPlus[:,1],5)),np.logical_not(np.isclose(shiftedMinus[:,1], 5))),
+                                    np.logical_not(np.isclose(data[:,1],5)))))]
     return croppedData
  
 def fixdata(data):
-    data2=splitdata(data)#removeDoublePhotonEvents(data))
+    data2=splitdata(removeDoublePhotonEvents(data))
     return data2
 
-#testdata=read_data('testdata.txt')
-    
 if __name__ == "__main__":
-    
+
     filename = "4level_200bins_2s_123width"
     data = read_data(filename + ".txt")
-    data = splitdata(data)
+    data = fixdata(data)
     for index, array in np.ndenumerate(data):
         np.savetxt(filename + "_" + str(index) + ".txt", array, delimiter = ",")
-
-
-
-
-
-
-
-
 
 
 
