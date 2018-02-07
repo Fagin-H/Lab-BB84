@@ -6,6 +6,7 @@ Created on Tue Feb  6 13:29:51 2018
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def read_data(location):
     data=np.loadtxt(location,delimiter=",")
@@ -17,7 +18,25 @@ def only5(data):
     index5 = np.argwhere(data[:,1]==5.)
     data2 = np.delete(data, indexno5, 0)
     return data2, index5
-    
+
+def no5(data):
+    indexno5 = np.argwhere(data[:,1]!=5.)
+    index5 = np.argwhere(data[:,1]==5.)
+    data2 = np.delete(data, index5, 0)
+    return data2, indexno5
+
+def only_port(data,n):
+    indexno = np.argwhere(data[:,1]!=n)
+    index = np.argwhere(data[:,1]==n)
+    data2 = np.delete(data, indexno, 0)
+    return data2, index
+
+def no_port(data,n):
+    indexno = np.argwhere(data[:,1]!=n)
+    index = np.argwhere(data[:,1]==n)
+    data2 = np.delete(data, index, 0)
+    return data2, indexno
+
 def average_time(only5_data):
     diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
     diff=np.average(diff[1:])
@@ -54,10 +73,27 @@ def fixdata(data):
 
 #testdata=read_data('4level_200bins_2s_123width.txt')
 
-fixeddata=fixdata(testdata)
+def save_splits_from_file(location):
+    data = read_data(location)
+    fixeddata=fixdata(data)
+    for i in range(len(fixeddata)):
+        np.savetxt('data%d.txt' (i),fixeddata[i])
+        
+#data = np.loadtxt('data\\data0.txt')
 
-for i in range(len(fixeddata)):
-    np.savetxt('data'+str(i)+'.txt',fixeddata[i])
+def count_time_histogram(data):
+    for i in [1,2,3,4]:
+        only = only_port(data,i)
+        data_n=(only[0])
+        index_n=(only[1])
+        count_times=((np.take(data[:,0],index_n.flatten()) - np.take(data[:,0],index_n.flatten()-1))*10**6)
+        plt.hist(count_times,np.linspace(0.05,0.08,1000))
+
+
+    plt.xlim(0.05,0.08)
+    plt.ylabel("Frequency")
+    plt.xlabel("Time after pulse (microseconds)")
+    plt.show()
 
 
 
