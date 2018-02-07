@@ -13,39 +13,28 @@ def read_data(location):
     return data
 
 def only5(data):
-    index = np.argwhere(data[:,1]!=5.)
-    data2 = np.delete(data, index, 0)
-    return data2
+    indexno5 = np.argwhere(data[:,1]!=5.)
+    index5 = np.argwhere(data[:,1]==5.)
+    data2 = np.delete(data, indexno5, 0)
+    return data2, index5
     
-def no5(data):
-    index = np.argwhere(data[:,1]==5.)
-    data2 = np.delete(data, index, 0)
-    return data2
-
 def average_time(only5_data):
     diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
     diff=np.average(diff[1:])
     return diff
 
-def add5(only5_data):
-
+def splitdata(data):
+    only5_data,index5 = only5(data)
     ave=average_time(only5_data)
     diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
     index = np.argwhere(diff>1.5*ave)
-    
     listindex=index.flatten()
+    split_index=np.take(index5,listindex)    
+    split_index=split_index.flatten()
     
-    split_data=np.split(only5_data,listindex)
-    newdata=[]
-    for sliced in split_data[:-1]:
-        newdata.append(sliced)
-        newdata.append([sliced[-1,0]+ave,5.])
-    newdata.append(split_data[-1])
-    return np.vstack(newdata)
-
-def joindata(fivedata,no5data):
-    data=np.vstack(([no5data,fivedata]))
-    return data[np.lexsort(np.fliplr(data).T)]
+    
+    split_data=np.split(data,split_index)
+    return split_data
 
 def removeDoublePhotonEvents(data):
     shiftedPlus = np.append(data[-1:], data[:-1], axis = 0)
@@ -54,7 +43,7 @@ def removeDoublePhotonEvents(data):
     return croppedData
  
 def fixdata(data):
-    data2=joindata(add5(only5(data)),no5(removeDoublePhotonEvents(data)))
+    data2=splitdata(data)#removeDoublePhotonEvents(data))
     return data2
 
 testdata=read_data('testdata.txt')
