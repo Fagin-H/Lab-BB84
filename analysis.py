@@ -15,10 +15,10 @@ def get_counts_with_voltage_steps(data):
 
 def basic_error_rate(count_data, steps_for_counts):
 
-    error_list = np.isclose(count_data, steps_for_counts)
+    error_list = np.logical_not(np.isclose(count_data, steps_for_counts))
     error_rate = np.mean(error_list)
 
-    print("Error rate is {}".format(error_rate))
+    print("Basic error rate is {}".format(error_rate))
 
 def BB84_error_rate(count_data, steps_for_counts):
 
@@ -31,10 +31,10 @@ def BB84_error_rate(count_data, steps_for_counts):
     error_list = np.logical_not(np.any(error_array, axis=1))
     error_rate = np.mean(error_list)
 
-    print("Error rate is {}".format(error_rate))
+    print("BB84 error rate is {}".format(error_rate))
 
 if __name__ == "__main__":
 
     data = read_data("countdata.txt")
     count_data, steps_for_counts = get_counts_with_voltage_steps(data)
-    BB84_error_rate(count_data, steps_for_counts)
+    basic_error_rate(count_data, steps_for_counts)
