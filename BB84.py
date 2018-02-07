@@ -29,7 +29,7 @@ def splitdata(data):
     diff=only5_data[:,0]-np.roll(only5_data[:,0],1)
     index = np.argwhere(diff>1.5*ave)
     listindex=index.flatten()
-    split_index=np.take(index5,listindex)    
+    split_index=np.take(index5,listindex)
     split_index=split_index.flatten()
     
     
