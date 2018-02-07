@@ -46,7 +46,7 @@ def fixdata(data):
     data2=splitdata(data)#removeDoublePhotonEvents(data))
     return data2
 
-testdata=read_data('testdata.txt')
+testdata=read_data('4level_200bins_2s_123width.txt')
 
 
 
