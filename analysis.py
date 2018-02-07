@@ -25,10 +25,16 @@ def BB84_error_rate(count_data, steps_for_counts):
     count_data = count_data.astype(int)
     count_data = count_data.reshape(count_data.size,1)
     steps_for_counts = steps_for_counts.astype(int)
-
-    valid_detectors = np.array([[0,2,3],[1,2,3],[0,1,2],[0,1,3]])
-    error_array = np.isclose(valid_detectors[steps_for_counts], count_data)
-    error_list = np.logical_not(np.any(error_array, axis=1))
+    
+    detectors_for_basis = np.array([[0,1],[0,1],[2,3],[2,3]])
+    detection_array = np.isclose(detectors_for_basis[steps_for_counts], count_data)
+    detection_list = np.any(detection_array, axis=1)
+    counts_to_consider = count_data[detection_list]
+    steps_to_consider = steps_for_counts[detection_list]
+    
+    counts_to_consider = counts_to_consider.reshape(counts_to_consider.size)
+    
+    error_list = np.logical_not(np.isclose(counts_to_consider, steps_to_consider))
     error_rate = np.mean(error_list)
 
     print("BB84 error rate is {}".format(error_rate))
@@ -37,4 +43,4 @@ if __name__ == "__main__":
 
     data = read_data("countdata.txt")
     count_data, steps_for_counts = get_counts_with_voltage_steps(data)
-    basic_error_rate(count_data, steps_for_counts)
+    BB84_error_rate(count_data, steps_for_counts)
