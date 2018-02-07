@@ -51,10 +51,27 @@ def fixdata(data):
     data2=splitdata(removeDoublePhotonEvents(data))
     return data2
 
+def coincidenceTiming(data):
+    plusShift = np.append(data[-1:], data[:-1], axis = 0)
+    eventHappened = np.logical_and(np.isclose(plusShift[:,1], 5), np.logical_not(np.isclose(data[:,1],5)))
+    timeDifference = np.subtract(plusShift[eventHappened][1:,0], data[eventHappened][1:,0])
+    meanTime = np.mean(timeDifference)
+    variance = np.var(timeDifference)
+    positiveLimit = meanTime + variance
+    negativeLimit = meanTime - variance
+    tD = np.subtract(plusShift[:,0],data[:,0])
+    croppedData = data[np.where(
+            np.logical_or(
+                    np.isclose(data[:,1], 5),
+                        np.logical_not(
+                                np.logical_and(
+                                        np.logical_not(np.isclose(data[:,1],5)),
+                                                       np.logical_and(tD <= positiveLimit, tD >= negativeLimit )))))]
+    return croppedData
 
 #testdata=read_data('4level_200bins_2s_123width.txt')
 
-fixeddata=fixdata(testdata)
+#fixeddata=fixdata(testdata)
 
 for i in range(len(fixeddata)):
     np.savetxt('data'+str(i)+'.txt',fixeddata[i])
