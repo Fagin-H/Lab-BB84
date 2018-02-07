@@ -49,15 +49,20 @@ def joindata(fivedata,no5data):
 
 def removeDoublePhotonEvents(data):
     shiftedPlus = np.append(data[-1:], data[:-1], axis = 0)
-    shiftedMinus = np.append(data[0:], data[:0],axis = 0)
-    croppedData = data[np.where(np.logical_not(np.logical_and(np.logical_or(np.isclose(data[:,1],shiftedPlus[:,1]),np.isclose(data[:,1], shiftedMinus[:,1])), np.logical_not(np.isclose(data[:,1],5)))))]
+    shiftedMinus = np.append(data[1:], data[:1], axis = 0)
+    croppedData = data[np.where(
+            np.logical_not(
+                    np.logical_and(
+                            np.logical_or(
+                                    np.logical_not(np.isclose(shiftedPlus[:,1],5)),np.logical_not(np.isclose(shiftedMinus[:,1], 5))),
+                                    np.logical_not(np.isclose(data[:,1],5)))))]
     return croppedData
  
 def fixdata(data):
     data2=joindata(add5(only5(data)),no5(removeDoublePhotonEvents(data)))
     return data2
 
-testdata=read_data('testdata.txt')
+#testdata=read_data('testdata.txt')
 
 
 
