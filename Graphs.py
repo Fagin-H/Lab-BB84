@@ -22,7 +22,7 @@ def group_data(data,n):
 
 def make_hist(data):
     dic=col.Counter(data)
-    return (dic[1]/(dic[1]+dic[2]),dic[2]/(dic[1]+dic[2]),dic[3]/(dic[3]+dic[4]),dic[4]/(dic[3]+dic[4]))
+    return (dic[1]/(dic[1]+dic[2]+1),dic[2]/(dic[1]+dic[2]+1),dic[3]/(dic[3]+dic[4]+1),dic[4]/(dic[3]+dic[4]+1))
 
 
 
@@ -41,5 +41,5 @@ def save_figs(data,location):
             plt.close()
 
 if __name__=='__main__':
-    data=np.loadtxt('data40.txt',delimiter=" ")
+    data=np.loadtxt('4Level_triggered_50db_att_run_all_trigs_new_arb_working.txt',delimiter=",")
     save_figs(data,'real_data_bar_plots')
