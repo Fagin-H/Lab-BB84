@@ -9,8 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def read_data(location):
-    data=np.loadtxt(location,delimiter=",")
-    data[:,0]=data[:,0]*81*10**-12
+    data=np.loadtxt(location,delimiter=" ")
+    #data[:,0]=data[:,0]*81*10**-12
     return data
 
 def only5(data):
@@ -87,10 +87,10 @@ def count_time_histogram(data):
         data_n=(only[0])
         index_n=(only[1])
         count_times=((np.take(data[:,0],index_n.flatten()) - np.take(data[:,0],index_n.flatten()-1))*10**6)
-        plt.hist(count_times,np.linspace(0.05,0.08,1000))
+        plt.hist(count_times,np.linspace(0.055,0.075,500))
 
 
-    plt.xlim(0.05,0.08)
+    plt.xlim(0.055,0.075)
     plt.ylabel("Frequency")
     plt.xlabel("Time after pulse (microseconds)")
     plt.show()
